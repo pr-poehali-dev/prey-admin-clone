@@ -1,14 +1,32 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useState } from "react";
+import { isAuthenticated } from "@/lib/api";
+import Login from "./Login";
+import AdminLayout from "@/components/AdminLayout";
+import Dashboard from "./Dashboard";
+import Players from "./Players";
+import Servers from "./Servers";
+import Items from "./Items";
+import Logs from "./Logs";
 
-const Index = () => {
+export default function Index() {
+  const [authed, setAuthed] = useState(isAuthenticated());
+  const [section, setSection] = useState("dashboard");
+
+  if (!authed) {
+    return <Login onLogin={() => setAuthed(true)} />;
+  }
+
+  const pages: Record<string, React.ReactNode> = {
+    dashboard: <Dashboard />,
+    players: <Players />,
+    servers: <Servers />,
+    items: <Items />,
+    logs: <Logs />,
+  };
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4 color-black text-black">Добро пожаловать!</h1>
-        <p className="text-xl text-gray-600">тут будет отображаться ваш проект</p>
-      </div>
-    </div>
+    <AdminLayout section={section} onSection={setSection} onLogout={() => setAuthed(false)}>
+      {pages[section] ?? <Dashboard />}
+    </AdminLayout>
   );
-};
-
-export default Index;
+}
