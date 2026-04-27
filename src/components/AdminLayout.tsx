@@ -1,5 +1,5 @@
-import { useState } from "react";
 import { getAdminInfo, logout } from "@/lib/api";
+import { useNavigate } from "react-router-dom";
 
 const NAV = [
   { key: "dashboard", label: "Главная", icon: "🏠" },
@@ -18,6 +18,7 @@ interface Props {
 
 export default function AdminLayout({ section, onSection, onLogout, children }: Props) {
   const admin = getAdminInfo();
+  const navigate = useNavigate();
 
   function handleLogout() {
     logout();
@@ -33,6 +34,12 @@ export default function AdminLayout({ section, onSection, onLogout, children }: 
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 12, color: "#204b2a", fontSize: 13 }}>
           <span>👤 {admin.username} ({admin.role})</span>
+          <button
+            onClick={() => navigate("/game")}
+            style={{ background: "#3a8a50", color: "#fff", border: "none", padding: "4px 12px", cursor: "pointer", borderRadius: 3, fontSize: 12 }}
+          >
+            🎮 Играть
+          </button>
           <button
             onClick={handleLogout}
             style={{ background: "#204b2a", color: "#fff", border: "none", padding: "4px 12px", cursor: "pointer", borderRadius: 3, fontSize: 12 }}
